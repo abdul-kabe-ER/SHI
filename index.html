@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHICPFDS - Smart Health Insurance Claims Portal</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div id="auth-screen" class="screen full-center-flex">
+    <div class="auth-wrapper">
+      <div class="brand-hub-header">
+        <div class="hub-logo"><i class="fa-solid fa-layer-group"></i></div>
+        <h1>SHICPFDS</h1>
+        <p>Unified Claims Underwriting Environment</p>
+      </div>
+      
+      <div class="auth-panel-card">
+        <div class="panel-intro">
+          <h3>Portal Authentication</h3>
+          <p class="subtitle">Select operational vector profile below</p>
+        </div>
+        
+        <div class="role-selection-dock">
+          <button class="dock-role-btn active" data-role="hospital">Hospital</button>
+          <button class="dock-role-btn" data-role="policyholder">Policyholder</button>
+          <button class="dock-role-btn" data-role="officer">Officer</button>
+          <button class="dock-role-btn" data-role="admin">Admin</button>
+        </div>
+
+        <form id="login-form">
+          <div class="input-field-group">
+            <label>IDENTITY CREDENTIAL TARGET</label>
+            <input type="email" id="login-email" value="billing@cityhospital.org" required>
+          </div>
+          <div class="input-field-group">
+            <label>SECURE IDENTITY KEY</label>
+            <input type="password" id="login-password" value="••••••••••••" required>
+          </div>
+          <button type="submit" class="action-btn core-btn-primary btn-full" id="signin-btn">Authorize Session</button>
+        </form>
+        <p class="sandboxed-banner text-center">System Status: <strong>Development Sandboxed</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="app-screen" class="screen main-app-layout hidden">
+    
+    <header class="app-top-bar">
+      <div class="top-bar-left">
+        <div class="app-brand-mark">
+          <i class="fa-solid fa-layer-group"></i> <span>SHICPFDS</span>
+        </div>
+        <nav class="horizontal-navbar" id="dynamic-sidebar-menu">
+          </nav>
+      </div>
+      
+      <div class="top-bar-right">
+        <div class="profile-pill">
+          <div class="avatar-circle" id="current-user-role">H</div>
+          <div class="profile-details">
+            <h4 id="user-display-name">City Hospital</h4>
+            <span id="user-display-role">Hospital Representative</span>
+          </div>
+        </div>
+        <button id="logout-btn" class="session-kill-btn" title="Revoke Access Token">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </header>
+
+    <main class="app-viewport-pane">
+      
+      <section id="hospital-dashboard-view" class="content-view hidden">
+        <div class="pane-headline-block">
+          <div>
+            <h2>Hospital Claims Management</h2>
+            <p>System Metrics Registry Console</p>
+          </div>
+          <button class="action-btn core-btn-primary" id="open-new-claim-btn"><i class="fa-solid fa-plus"></i> New Claim Submission</button>
+        </div>
+
+        <div class="dashboard-stats-row">
+          <div class="stat-widget-box">
+            <div class="widget-data"><span>Total Submitted</span><h2 id="hosp-metric-total">0</h2></div>
+            <div class="widget-icon accent-blue"><i class="fa-solid fa-file-invoice"></i></div>
+          </div>
+          <div class="stat-widget-box">
+            <div class="widget-data"><span>Pending Processing</span><h2 id="hosp-metric-pending">0</h2></div>
+            <div class="widget-icon accent-yellow"><i class="fa-solid fa-hourglass"></i></div>
+          </div>
+          <div class="stat-widget-box">
+            <div class="widget-data"><span>Approved Payouts</span><h2 id="hosp-metric-approved">0</h2></div>
+            <div class="widget-icon accent-green"><i class="fa-solid fa-check-double"></i></div>
+          </div>
+          <div class="stat-widget-box">
+            <div class="widget-data"><span>Flagged Risks</span><h2 id="hosp-metric-flagged">0</h2></div>
+            <div class="widget-icon accent-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          </div>
+        </div>
+
+        <div class="viewport-data-card">
+          <div class="data-card-header">
+            <h3>Facility Submissions Registry</h3>
+            <span class="pill-counter-badge" id="hosp-table-badge">0 Entries</span>
+          </div>
+          <div class="responsive-scroller">
+            <table class="portal-core-table">
+              <thead>
+                <tr>
+                  <th>CLAIM REF</th>
+                  <th>POLICYHOLDER</th>
+                  <th>PROCEDURE CODE DESCRIPTION</th>
+                  <th>AMOUNT REQUESTED</th>
+                  <th>PORTAL STATUS</th>
+                  <th>EVAL RISK</th>
+                  <th>FILED TIMELINES</th>
+                </tr>
+              </thead>
+              <tbody id="hospital-claims-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="policyholder-dashboard-view" class="content-view hidden">
+        <div class="pane-headline-block">
+          <div>
+            <h2>My Insurance Claims Index</h2>
+            <p>Personal benefits summary tracking records and active claim updates.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-stats-row alignment-dual">
+          <div class="stat-widget-box">
+            <div class="widget-data"><span>Total Filed Claims</span><h2 id="holder-metric-total">0</h2></div>
+            <div class="widget-icon accent-blue"><i class="fa-solid fa-shield"></i></div>
+          </div>
+          <div class="stat-widget-box">
+            <div class="widget-data"><span>Remaining Benefit Cap</span><h2>$14,200</h2></div>
+            <div class="widget-icon accent-green"><i class="fa-solid fa-vault"></i></div>
+          </div>
+        </div>
+
+        <div class="viewport-data-card">
+          <div class="data-card-header">
+            <h3>Personal Settlement History</h3>
+          </div>
+          <div class="responsive-scroller">
+            <table class="portal-core-table">
+              <thead>
+                <tr>
+                  <th>CLAIM REF</th>
+                  <th>TREATMENT OVERVIEW</th>
+                  <th>CLAIM AMOUNT</th>
+                  <th>DECISION STATUS</th>
+                  <th>LAST UPDATED</th>
+                </tr>
+              </thead>
+              <tbody id="holder-claims-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="officer-review-view" class="content-view hidden">
+        <div class="pane-headline-block">
+          <div>
+            <h2>Secure Claims Underwriting Ledger</h2>
+            <p>Verification queue requiring formal adjustments, overrides, or fraud check clearances.</p>
+          </div>
+        </div>
+
+        <div class="viewport-data-card">
+          <div class="data-card-header">
+            <h3>Claims Risk Verification Queue</h3>
+            <span class="pill-counter-badge alert-red-badge">High Risk Targets Prioritized</span>
+          </div>
+          <div class="responsive-scroller">
+            <table class="portal-core-table">
+              <thead>
+                <tr>
+                  <th>QUEUE ID</th>
+                  <th>SUBMITTING FACILITY</th>
+                  <th>COVERAGE PROFILE</th>
+                  <th>TOTAL SUM</th>
+                  <th>FRAUD RISK FACTOR</th>
+                  <th>OPERATIONS TARGET</th>
+                </tr>
+              </thead>
+              <tbody id="officer-queue-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin-audit-view" class="content-view hidden">
+        <div class="pane-headline-block">
+          <div>
+            <h2>System Audit Logs & Security Diagnostics</h2>
+            <p>Live readouts tracking infrastructure data modifications, security triggers, and engine actions.</p>
+          </div>
+        </div>
+
+        <div class="viewport-data-card">
+          <div class="data-card-header">
+            <h3>Core Protocol Operations Logs</h3>
+            <span class="pill-counter-badge alert-blue-badge">System Integrity Live</span>
+          </div>
+          <div class="responsive-scroller">
+            <table class="portal-core-table monospaced-log-table">
+              <thead>
+                <tr>
+                  <th>TIMESTAMP (EST)</th>
+                  <th>EVENT PROTOCOL INTERFACE</th>
+                  <th>SUBSYSTEM CATEGORY</th>
+                  <th>MESSAGE DETAILS</th>
+                  <th>OPERATOR SHA</th>
+                </tr>
+              </thead>
+              <tbody id="admin-logs-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="new-claim-form-view" class="content-view hidden">
+        <div class="pane-headline-block">
+          <div>
+            <h2>New Claim Entry Wizard</h2>
+            <p>Ensure patient identity mappings are resolved prior to invoking core evaluation criteria.</p>
+          </div>
+        </div>
+
+        <div class="split-wizard-grid">
+          <div class="wizard-inputs-column">
+            
+            <div class="wizard-panel-container">
+              <h4>Policyholder Reference Verification</h4>
+              <div class="input-flex-row">
+                <div class="input-field-group weight-2">
+                  <label>ENTER CORE ACTIVE POLICY ID *</label>
+                  <input type="text" id="claim-policy-id" placeholder="e.g., POL-2024-00142">
+                </div>
+                <div class="input-field-group weight-1">
+                  <label>TREATMENT SCHEDULE DATE *</label>
+                  <input type="date" id="claim-date">
+                </div>
+              </div>
+              
+              <div id="lookup-success-indicator" class="identity-lookup-banner hidden">
+                <i class="fa-solid fa-circle-check"></i>
+                <div>
+                  <strong id="lookup-name">—</strong> — <span id="lookup-tier" class="tier-tag-capsule">GOLD</span> — <span id="lookup-balance">—</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="wizard-panel-container">
+              <h4>Clinical Classification Codes</h4>
+              <div class="procedure-entry-row">
+                <div class="input-field-group width-cpt">
+                  <label>CPT-4 CODE</label>
+                  <input type="text" id="cpt-code-field" placeholder="e.g., 44950">
+                </div>
+                <div class="input-field-group weight-dynamic">
+                  <label>PROCEDURAL CLINICAL DESCRIPTION</label>
+                  <input type="text" id="cpt-desc-field" placeholder="e.g., Appendectomy - Open Surgery">
+                </div>
+                <div class="input-field-group width-units">
+                  <label>UNITS</label>
+                  <input type="number" id="cpt-qty-field" value="1">
+                </div>
+                <div class="input-field-group width-cost">
+                  <label>GROSS CHARGE ($)</label>
+                  <input type="number" id="cpt-amount-field" placeholder="0.00">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="wizard-sticky-summary-column">
+            <div class="summary-receipt-card">
+              <h4>Claim Verification Summary</h4>
+              
+              <div class="receipt-metric-line">
+                <span>Policy Holder Name</span>
+                <strong id="side-holder">—</strong>
+              </div>
+              <div class="receipt-metric-line">
+                <span>Coverage Service Tier</span>
+                <strong id="side-tier">—</strong>
+              </div>
+              
+              <div class="receipt-hr-divider"></div>
+              
+              <div class="receipt-metric-line total-highlight">
+                <span>Calculated Charge</span>
+                <span id="side-total">$0</span>
+              </div>
+            </div>
+
+            <div class="summary-receipt-card dynamic-validation-card">
+              <h4>Pre-Flight Core Auditing Rules</h4>
+              <ul class="auditing-rule-checklist">
+                <li class="rule-item checked" id="rule-fields-complete">
+                  <i class="fa-solid fa-square-check"></i> Mandatory Input Mappings Satisfied
+                </li>
+                <li class="rule-item" id="rule-valid-policy">
+                  <i class="fa-solid fa-square"></i> Active System Network Policy Found
+                </li>
+                <li class="rule-item" id="rule-cpt-match">
+                  <i class="fa-solid fa-square"></i> CPT Structure Match Verification
+                </li>
+              </ul>
+            </div>
+
+            <button class="action-btn core-btn-primary btn-full" id="submit-claim-btn" disabled>
+              <i class="fa-solid fa-bolt"></i> Dispatch Ingest Payload
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="review-modal" class="portal-modal-backdrop hidden">
+    <div class="modal-surface-container">
+      <div class="modal-surface-header">
+        <h3><i class="fa-solid fa-user-shield"></i> Adjudication Decision Panel</h3>
+        <button class="modal-close-trigger" id="close-modal-btn">&times;</button>
+      </div>
+      
+      <div class="modal-surface-body">
+        <div class="modal-data-layout">
+          <div class="modal-meta-grid">
+            <div class="meta-field-cell">
+              <label>CLAIM REFERENCE HASH</label>
+              <p id="modal-claim-ref">—</p>
+            </div>
+            <div class="meta-field-cell">
+              <label>PATIENT IDENTIFICATION</label>
+              <p id="modal-patient-name">—</p>
+            </div>
+            <div class="meta-field-cell">
+              <label>SUBMITTING PROV</label>
+              <p id="modal-provider">—</p>
+            </div>
+            <div class="meta-field-cell">
+              <label>REQUESTED DISBURSEMENT</label>
+              <p id="modal-amount">—</p>
+            </div>
+            <div class="meta-field-cell full-width-cell">
+              <label>PROCEDURAL REASONING MATRIX</label>
+              <p id="modal-procedure">—</p>
+            </div>
+          </div>
+
+          <div class="decision-execution-box">
+            <h4>Adjudication Determination Overrides</h4>
+            <p class="instruction-text">Select an executive payload switch action below to commit state changes:</p>
+            <div class="modal-action-buttons-stack">
+              <button class="action-btn decision-approve" id="adj-approve-btn"><i class="fa-solid fa-check"></i> Approve Claim Payout</button>
+              <button class="action-btn decision-escalate" id="adj-flag-btn"><i class="fa-solid fa-flag"></i> Flag/Escalate Back</button>
+              <button class="action-btn decision-reject" id="adj-reject-btn"><i class="fa-solid fa-ban"></i> Deny & Reject Claim</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="success-modal" class="portal-modal-backdrop hidden">
+    <div class="modal-surface-container structural-compact-modal">
+      <div class="success-icon-badge"><i class="fa-solid fa-circle-check"></i></div>
+      <h2>Claim Injected Successfully</h2>
+      <p class="receipt-hash text-muted">Receipt Hash Block: <strong id="modal-claim-id">—</strong></p>
+      <p class="success-description-text text-muted">Transaction processed through automated parsing layers. Dashboard matrices updated locally.</p>
+      <button class="action-btn core-btn-primary btn-full" id="modal-dashboard-btn">Return to Activity Console</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
